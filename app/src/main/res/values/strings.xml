@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">Weather</string>
+
+    <string name="error_0">Error 0: Unsuccessful response. Try again.</string>
+    <string name="error_1">Error 1: Unknown error.</string>
+    <string name="error_2">Error 2: The response time has expired. Try again.</string>
+    <string name="error_3">Error 3: Connection lost. Try again.</string>
+    <string name="error_4">Error 4: Error while fetching data. See logs.</string>
+
+    <string name="city_minsk">Minsk</string>
+    <string name="city_gomel">Gomel</string>
+    <string name="city_vitebsk">Vitebsk</string>
+    <string name="city_mogilev">Mogilev</string>
+    <string name="city_grodno">Grodno</string>
+    <string name="city_brest">Brest</string>
 </resources>
