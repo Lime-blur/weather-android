@@ -11,13 +11,12 @@ class WeatherUseCases(
     @Inject val restClient: RestClient
 ) {
 
-    suspend fun fetchDailyWeatherData(
+    suspend fun fetchDailyWeather(
         weatherRequestEntity: WeatherRequestEntity
     ): WeatherResponseState {
         val cityType = weatherRequestEntity.cityType
-        return DailyWeatherRepository(
-            defaultErrorMessage = ErrorType.ERROR_0_RESULT_UNSUCCESSFUL
-        ).getDailyWeather(
+        val dailyWeatherRepository = DailyWeatherRepository(ErrorType.ERROR_0_RESULT_UNSUCCESSFUL)
+        return dailyWeatherRepository.getDailyWeather(
             cityType = cityType,
             request = {
                 restClient.weatherDao?.requestWeather(
