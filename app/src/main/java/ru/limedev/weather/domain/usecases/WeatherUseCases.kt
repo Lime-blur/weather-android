@@ -11,7 +11,7 @@ class WeatherUseCases(
     @Inject val restClient: RestClient
 ) {
 
-    suspend fun fetchDailyWeatherData(
+    suspend fun fetchDailyWeather(
         weatherRequestEntity: WeatherRequestEntity
     ): WeatherResponseState {
         val cityType = weatherRequestEntity.cityType
