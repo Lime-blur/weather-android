@@ -1,31 +1,28 @@
 package ru.limedev.weather.domain.usecases
 
-import ru.limedev.weather.data.network.RestClient
-import ru.limedev.weather.domain.entity.ErrorType
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import ru.limedev.weather.data.repository.DailyWeatherRepository
+import ru.limedev.weather.domain.WeatherResult
 import ru.limedev.weather.domain.entity.WeatherRequestEntity
-import ru.limedev.weather.domain.repository.DailyWeatherRepository
-import ru.limedev.weather.presentation.viewState.WeatherResponseState
+import ru.limedev.weather.domain.mappers.toWeatherViewState
+import ru.limedev.weather.presentation.viewstate.WeatherState
 import javax.inject.Inject
 
-class WeatherUseCases(
-    @Inject val restClient: RestClient
+class WeatherUseCases @Inject constructor(
+    private val dailyWeatherRepository: DailyWeatherRepository
 ) {
 
-    suspend fun fetchDailyWeather(
-        weatherRequestEntity: WeatherRequestEntity
-    ): WeatherResponseState {
-        val cityType = weatherRequestEntity.cityType
-        val dailyWeatherRepository = DailyWeatherRepository(ErrorType.ERROR_0_RESULT_UNSUCCESSFUL)
-        return dailyWeatherRepository.getDailyWeather(
-            cityType = cityType,
-            request = {
-                restClient.weatherDao?.requestWeather(
-                    lat = cityType.lat,
-                    lon = cityType.lon,
-                    exclude = weatherRequestEntity.exclude,
-                    apiKey = weatherRequestEntity.apiKey
-                )
-            }
-        )
+    suspend fun fetchWeatherData(weatherRequestEntity: WeatherRequestEntity): Flow<WeatherState> {
+        return flow {
+            emit(WeatherState.Loading)
+            emit(formatWeatherData(dailyWeatherRepository.fetchData(weatherRequestEntity)))
+        }.flowOn(Dispatchers.IO)
+    }
+
+    private fun <T> formatWeatherData(weatherResult: WeatherResult<T>): WeatherState {
+        return weatherResult.toWeatherViewState()
     }
 }
