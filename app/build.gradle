@@ -14,7 +14,7 @@ android {
         targetSdk 32
         versionCode 1
         versionName "1.0"
-        resValue "string", "API_KEY", "9b232676548a5d2d0aad7d8fe9f85562"
+        buildConfigField("String", "API_KEY", "\"9b232676548a5d2d0aad7d8fe9f85562\"")
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -65,6 +65,13 @@ dependencies {
     kapt 'com.google.dagger:hilt-android-compiler:2.38.1'
 
     // Coroutines
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1'
+
+    // ViewModel
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.0'
+    implementation 'androidx.fragment:fragment-ktx:1.5.0'
+
+    // Debug retrofit
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.2.1'
 }
