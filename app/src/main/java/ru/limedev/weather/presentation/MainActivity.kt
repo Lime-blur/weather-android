@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity() {
                     Log.e("Error", getString(newsState.error.resId))
                 }
                 is WeatherState.Success -> {
-                    Log.i("Success", newsState.data.toString())
+                    Log.i("Success", newsState.weather.toString())
                 }
             }
         })
