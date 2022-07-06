@@ -1,7 +1,6 @@
 package ru.limedev.weather.presentation.viewstate
 
 import ru.limedev.weather.domain.entity.ErrorType
-import ru.limedev.weather.domain.entity.WeatherResponseEntity
 import ru.limedev.weather.presentation.model.WeatherUI
 
 sealed class WeatherState {
