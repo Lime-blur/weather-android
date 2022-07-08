@@ -7,7 +7,7 @@ import ru.limedev.weather.data.model.WeatherDto
 
 interface WeatherDao {
 
-    @GET("/")
+    @GET("data/2.5/onecall")
     suspend fun requestWeather(
         @Query("lat") lat: String,
         @Query("lon") lon: String,

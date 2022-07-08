@@ -6,13 +6,70 @@
     android:layout_height="match_parent"
     tools:context=".presentation.MainActivity">
 
+    <Spinner
+        android:id="@+id/spinner_cities"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:spinnerMode="dialog"
+        app:layout_constraintBottom_toBottomOf="@+id/button_get_weather"
+        app:layout_constraintEnd_toStartOf="@+id/guideline2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/button_get_weather" />
+
     <TextView
+        android:id="@+id/tv_weather_now"
+        style="@style/TextTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginStart="@dimen/margin_general_horizontal_medium"
+        android:layout_marginTop="@dimen/margin_general_vertical_medium"
+        android:layout_marginEnd="@dimen/margin_general_horizontal_medium"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_get_weather"
+        tools:text="Now: Cloudy" />
+
+    <TextView
+        android:id="@+id/tv_weather_next_days"
+        style="@style/TextGeneral"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_general_vertical_medium"
+        app:layout_constraintEnd_toEndOf="@+id/tv_weather_now"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/tv_weather_now"
+        app:layout_constraintTop_toBottomOf="@+id/tv_weather_now"
+        tools:text="Next three days: Cloudy, Cloudy, Cloudy" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/button_get_weather"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_general_vertical_medium"
+        android:layout_marginEnd="@dimen/margin_general_horizontal_medium"
+        android:text="@string/get_weather"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.7" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

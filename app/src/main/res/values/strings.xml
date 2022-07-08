@@ -6,6 +6,7 @@
     <string name="error_2">Error 2: The response time has expired. Try again.</string>
     <string name="error_3">Error 3: Connection lost. Try again.</string>
     <string name="error_4">Error 4: Error while fetching data. See logs.</string>
+    <string name="error_5">Error 5: Entity field is null.</string>
 
     <string name="city_minsk">Minsk</string>
     <string name="city_gomel">Gomel</string>
@@ -13,4 +14,9 @@
     <string name="city_mogilev">Mogilev</string>
     <string name="city_grodno">Grodno</string>
     <string name="city_brest">Brest</string>
+
+    <string name="weather_now">Now in %s: %s</string>
+    <string name="weather_next_three_days">Next three days: %s, %s, %s</string>
+    <string name="get_weather">Get weather!</string>
+    <string name="unknown_weather">Unknown weather</string>
 </resources>

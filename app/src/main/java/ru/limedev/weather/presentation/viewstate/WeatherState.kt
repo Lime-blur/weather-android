@@ -1,7 +1,7 @@
 package ru.limedev.weather.presentation.viewstate
 
 import ru.limedev.weather.domain.entity.ErrorType
-import ru.limedev.weather.domain.entity.WeatherResponseEntity
+import ru.limedev.weather.presentation.model.WeatherUI
 
 sealed class WeatherState {
 
@@ -10,7 +10,7 @@ sealed class WeatherState {
     object Loading : WeatherState()
 
     data class Success(
-        val data: WeatherResponseEntity?
+        val weather: WeatherUI
     ) : WeatherState()
 
     data class Error(
