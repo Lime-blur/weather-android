@@ -10,7 +10,7 @@ sealed class WeatherState {
     object Loading : WeatherState()
 
     data class Success(
-        val weather: WeatherUI?
+        val weather: WeatherUI
     ) : WeatherState()
 
     data class Error(

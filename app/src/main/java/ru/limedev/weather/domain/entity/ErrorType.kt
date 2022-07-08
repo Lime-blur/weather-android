@@ -10,7 +10,8 @@ enum class ErrorType(
     ERROR_1_UNKNOWN_ERROR(R.string.error_1),
     ERROR_2_TIMEOUT(R.string.error_2),
     ERROR_3_NO_CONNECTION(R.string.error_3),
-    ERROR_4_FETCH_DATA(R.string.error_4);
+    ERROR_4_FETCH_DATA(R.string.error_4),
+    ERROR_5_ENTITY_FIELD_IS_NULL(R.string.error_5);
 
     companion object {
         fun getErrorFromExceptionMessage(message: String?): ErrorType {

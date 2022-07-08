@@ -1,19 +1,24 @@
 package ru.limedev.weather.presentation
 
 import android.os.Bundle
-import android.util.Log
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import ru.limedev.weather.BuildConfig
+import ru.limedev.weather.R
 import ru.limedev.weather.databinding.ActivityMainBinding
 import ru.limedev.weather.domain.entity.CityType
 import ru.limedev.weather.domain.entity.ErrorType
 import ru.limedev.weather.domain.entity.WeatherRequestEntity
+import ru.limedev.weather.presentation.custom.WeatherSpinnerAdapter
 import ru.limedev.weather.presentation.intent.WeatherIntent
 import ru.limedev.weather.presentation.model.WeatherUI
+import ru.limedev.weather.presentation.utilities.getCurrentWeather
+import ru.limedev.weather.presentation.utilities.getNextThreeDaysWeather
 import ru.limedev.weather.presentation.viewmodel.WeatherViewModel
 import ru.limedev.weather.presentation.viewstate.WeatherState
 
@@ -31,9 +36,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setupSpinner()
         observeWeatherData()
         loadWeatherData(savedInstanceState)
         weatherViewModel.handleIntent()
+        initListeners()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -43,21 +50,41 @@ class MainActivity : AppCompatActivity() {
         super.onSaveInstanceState(outState)
     }
 
+    private fun initListeners() {
+        binding.buttonGetWeather.setOnClickListener {
+            val selectedCityType = binding.spinnerCities.selectedItem as? CityType
+            if (selectedCityType != null) {
+                val requestEntity = buildRequestEntity(selectedCityType)
+                requestWeatherData(requestEntity)
+            }
+        }
+    }
+
+    private fun setupSpinner() {
+        val adapter = WeatherSpinnerAdapter(this, R.layout.item_spinner)
+        adapter.submitArray(CityType.values())
+        binding.spinnerCities.adapter = adapter
+    }
+
     private fun loadWeatherData(savedInstanceState: Bundle?) {
         val weatherUI = savedInstanceState?.getParcelable<WeatherUI>(SAVED_DAILY_WEATHER_KEY)
         if (weatherUI != null) {
             handleSuccessState(weatherUI)
         } else {
-            requestWeatherData()
+            val requestEntity = buildRequestEntity()
+            requestWeatherData(requestEntity)
         }
     }
 
-    private fun requestWeatherData() {
+    private fun buildRequestEntity(cityType: CityType? = null): WeatherRequestEntity {
+        return WeatherRequestEntity(
+            cityType = cityType ?: CityType.MINSK,
+            apiKey = BuildConfig.API_KEY
+        )
+    }
+
+    private fun requestWeatherData(weatherRequestEntity: WeatherRequestEntity) {
         weatherViewModel.viewModelScope.launch {
-            val weatherRequestEntity = WeatherRequestEntity(
-                cityType = CityType.GOMEL,
-                apiKey = BuildConfig.API_KEY
-            )
             weatherViewModel.weatherIntent.send(
                 WeatherIntent.FetchDailyWeather(weatherRequestEntity)
             )
@@ -77,19 +104,24 @@ class MainActivity : AppCompatActivity() {
 
     private fun handleErrorState(errorType: ErrorType) {
         savedWeather = null
-        Log.e("Error", getString(errorType.resId))
+        binding.progressBar.isVisible = false
+        Toast.makeText(applicationContext, errorType.resId, Toast.LENGTH_LONG).show()
     }
 
     private fun handleNoState() {
         savedWeather = null
+        binding.progressBar.isVisible = false
     }
 
     private fun handleLoadingState() {
         savedWeather = null
+        binding.progressBar.isVisible = true
     }
 
-    private fun handleSuccessState(weatherUI: WeatherUI?) {
+    private fun handleSuccessState(weatherUI: WeatherUI) {
         savedWeather = weatherUI
-        Log.i("Success", weatherUI.toString())
+        binding.progressBar.isVisible = false
+        binding.tvWeatherNow.text = weatherUI.getCurrentWeather(this)
+        binding.tvWeatherNextDays.text = weatherUI.getNextThreeDaysWeather(this)
     }
 }

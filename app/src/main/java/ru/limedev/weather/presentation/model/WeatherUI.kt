@@ -15,11 +15,6 @@ data class WeatherUI(
     @Parcelize
     data class WeatherUIInfo(
         val date: Calendar?,
-        val weatherList: List<WeatherUIDescription>
-    ) : Parcelable
-
-    @Parcelize
-    data class WeatherUIDescription(
-        val description: String
+        val description: String?
     ) : Parcelable
 }
