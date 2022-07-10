@@ -8,11 +8,16 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.launch
 import ru.limedev.weather.domain.entity.WeatherRequestEntity
+import ru.limedev.weather.domain.mappers.toWeatherDbEntity
+import ru.limedev.weather.domain.mappers.toWeatherUI
 import ru.limedev.weather.domain.usecases.WeatherUseCases
 import ru.limedev.weather.presentation.intent.WeatherIntent
 import ru.limedev.weather.presentation.lifecycle.SingleLiveEvent
 import ru.limedev.weather.presentation.viewstate.WeatherState
+import java.util.*
 import javax.inject.Inject
+
+private const val MAX_INTERVAL_OLD_DATE = 60000
 
 @HiltViewModel
 class WeatherViewModel @Inject constructor(
@@ -34,8 +39,38 @@ class WeatherViewModel @Inject constructor(
     }
 
     private suspend fun fetchDailyWeather(weatherRequestEntity: WeatherRequestEntity) {
-        weatherUseCases.fetchWeatherData(weatherRequestEntity).collectLatest {
-            _weatherLiveData.setValue(it)
-        }
+        weatherUseCases
+            .fetchWeatherDbData(weatherRequestEntity.cityType)
+            .collectLatest { weatherDbEntity ->
+                if (weatherDbEntity == null) {
+                    weatherUseCases.fetchWeatherData(weatherRequestEntity).collectLatest {
+                        if (it is WeatherState.Success) {
+                            weatherUseCases.insertDailyWeatherIntoDb(
+                                it.weather.toWeatherDbEntity(Calendar.getInstance().timeInMillis)
+                            )
+                        }
+                        _weatherLiveData.setValue(it)
+                    }
+                } else {
+                    if (detectOldDate(weatherDbEntity.requestDateInMillis)) {
+                        weatherUseCases.fetchWeatherData(weatherRequestEntity).collectLatest {
+                            if (it is WeatherState.Success) {
+                                weatherUseCases.insertDailyWeatherIntoDb(
+                                    it.weather.toWeatherDbEntity(Calendar.getInstance().timeInMillis)
+                                )
+                            }
+                            _weatherLiveData.setValue(it)
+                        }
+                    } else {
+                        val state = WeatherState.Success(weatherDbEntity.toWeatherUI())
+                        _weatherLiveData.setValue(state)
+                    }
+                }
+            }
+    }
+
+    private fun detectOldDate(oldDateInMillis: Long): Boolean {
+        val currentDate = Calendar.getInstance().timeInMillis
+        return (currentDate - oldDateInMillis > MAX_INTERVAL_OLD_DATE)
     }
 }

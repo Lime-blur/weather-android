@@ -12,7 +12,7 @@ import ru.limedev.weather.domain.entity.WeatherResponseEntity
 import ru.limedev.weather.domain.repository.IWeatherRepository
 import javax.inject.Inject
 
-class DailyWeatherRepository @Inject constructor(
+class WeatherNetworkRepository @Inject constructor(
     private val restClient: RestClient
 ) : IWeatherRepository<WeatherRequestEntity, WeatherResponseEntity> {
 

@@ -49,30 +49,36 @@ kapt {
 
 dependencies {
 
-    implementation 'androidx.core:core-ktx:1.8.0'
-    implementation 'androidx.appcompat:appcompat:1.4.2'
-    implementation 'com.google.android.material:material:1.6.1'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-    testImplementation 'junit:junit:4.+'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    implementation("androidx.core:core-ktx:${rootProject.ext.android_core_ktx_version}")
+    implementation("androidx.appcompat:appcompat:${rootProject.ext.android_appcompat_version}")
+    implementation("com.google.android.material:material:${rootProject.ext.android_material_version}")
+    implementation("androidx.constraintlayout:constraintlayout:${rootProject.ext.android_constraint_layout_version}")
+    testImplementation("junit:junit:${rootProject.ext.junit_version}")
+    androidTestImplementation("androidx.test.ext:junit:${rootProject.ext.android_junit_version}")
+    androidTestImplementation("androidx.test.espresso:espresso-core:${rootProject.ext.espresso_version}")
 
     // Retrofit
-    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation("com.squareup.retrofit2:retrofit:${rootProject.ext.retrofit_version}")
+    implementation("com.squareup.retrofit2:converter-gson:${rootProject.ext.retrofit_version}")
 
     // Hilt
-    implementation 'com.google.dagger:hilt-android:2.38.1'
-    kapt 'com.google.dagger:hilt-android-compiler:2.38.1'
+    implementation("com.google.dagger:hilt-android:${rootProject.ext.hilt_version}")
+    kapt("com.google.dagger:hilt-android-compiler:${rootProject.ext.hilt_version}")
 
     // Coroutines
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1'
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${rootProject.ext.coroutines_ktx_version}")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${rootProject.ext.coroutines_ktx_version}")
 
     // ViewModel
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.0'
-    implementation 'androidx.fragment:fragment-ktx:1.5.0'
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:${rootProject.ext.viewmodel_ktx_version}")
+    implementation("androidx.fragment:fragment-ktx:${rootProject.ext.fragment_ktx_version}")
 
     // Debug retrofit
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.2.1'
+    implementation("com.squareup.okhttp3:logging-interceptor:${rootProject.ext.okhttp3_logging_version}")
+
+    // Room
+    implementation("androidx.room:room-runtime:${rootProject.ext.room_version}")
+    annotationProcessor "androidx.room:room-compiler:${rootProject.ext.room_version}"
+    kapt("androidx.room:room-compiler:${rootProject.ext.room_version}")
+    implementation("androidx.room:room-ktx:${rootProject.ext.room_version}")
 }
