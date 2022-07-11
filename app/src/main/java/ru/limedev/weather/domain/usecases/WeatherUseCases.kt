@@ -30,6 +30,16 @@ class WeatherUseCases @Inject constructor(
         }.flowOn(Dispatchers.IO)
     }
 
+    suspend fun fetchLastSelectedCityType(): Flow<WeatherState> {
+        return flow {
+            emit(
+                WeatherState.SuccessCityType(
+                    weatherDbRepository.getLastSelectedCityType()
+                )
+            )
+        }.flowOn(Dispatchers.IO)
+    }
+
     suspend fun fetchWeatherDbData(cityType: CityType): Flow<WeatherState> {
         return flow {
             emit(weatherDbRepository.getDailyWeatherByCityType(cityType)

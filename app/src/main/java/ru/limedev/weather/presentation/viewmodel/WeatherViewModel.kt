@@ -30,22 +30,32 @@ class WeatherViewModel @Inject constructor(
             weatherIntent.consumeAsFlow().collect {
                 when (it) {
                     is WeatherIntent.FetchDailyWeather -> fetchDailyWeather(it.weatherRequestEntity)
+                    is WeatherIntent.FetchLastSelectedCityType -> fetchLastSelectedCityType()
                 }
             }
         }
     }
 
+    private suspend fun fetchLastSelectedCityType() {
+        weatherUseCases
+            .fetchLastSelectedCityType()
+            .collectLatest { weatherState ->
+                _weatherLiveData.setValue(weatherState)
+            }
+    }
+
     private suspend fun fetchDailyWeather(weatherRequestEntity: WeatherRequestEntity) {
         weatherUseCases
             .fetchWeatherDbData(weatherRequestEntity.cityType)
-            .collectLatest {
-                if (it is WeatherState.Success) {
-                    if (it.weather.requestDateInMillis.isOldDate()) {
+            .collectLatest { weatherState ->
+                if (weatherState is WeatherState.Success) {
+                    if (weatherState.weather.requestDateInMillis.isOldDate()) {
                         fetchNetworkDailyWeather(weatherRequestEntity)
                     } else {
-                        _weatherLiveData.setValue(it)
+                        _weatherLiveData.setValue(weatherState)
                     }
-                } else {
+                }
+                else if (weatherState is WeatherState.Error) {
                     fetchNetworkDailyWeather(weatherRequestEntity)
                 }
             }

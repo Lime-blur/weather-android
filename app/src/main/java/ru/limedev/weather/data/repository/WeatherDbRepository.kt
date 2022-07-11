@@ -10,6 +10,10 @@ class WeatherDbRepository @Inject constructor(
     private val weatherDbDao: WeatherDbDao
 ) : IWeatherDbRepository {
 
+    override suspend fun getLastSelectedCityType(): CityType? {
+        return weatherDbDao.getLastSelectedCityType()
+    }
+
     override suspend fun getDailyWeatherByCityType(cityType: CityType): WeatherDbEntity? {
         return weatherDbDao.getDailyWeatherByCityType(cityType)
     }

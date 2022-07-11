@@ -11,6 +11,9 @@ import ru.limedev.weather.domain.entity.WeatherDbEntity
 @Dao
 interface WeatherDbDao {
 
+    @Query("SELECT cityType FROM weatherDbEntity ORDER BY requestDateInMillis DESC LIMIT 1")
+    suspend fun getLastSelectedCityType(): CityType?
+
     @Query("SELECT * FROM weatherDbEntity WHERE cityType = :cityType")
     suspend fun getDailyWeatherByCityType(cityType: CityType): WeatherDbEntity?
 
