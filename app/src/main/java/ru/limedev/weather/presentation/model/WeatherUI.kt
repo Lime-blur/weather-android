@@ -9,7 +9,8 @@ import java.util.*
 data class WeatherUI(
     val cityType: CityType,
     val currentWeather: WeatherUIInfo,
-    val dailyWeather: List<WeatherUIInfo>
+    val dailyWeather: List<WeatherUIInfo>,
+    val requestDateInMillis: Long = 0L
 ) : Parcelable {
 
     @Parcelize

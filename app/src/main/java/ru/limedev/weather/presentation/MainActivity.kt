@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity() {
 
     private val weatherViewModel: WeatherViewModel by viewModels()
     private var savedWeather: WeatherUI? = null
+    private var spinnerAdapter: WeatherSpinnerAdapter? = null
 
     private lateinit var binding: ActivityMainBinding
 
@@ -64,6 +65,7 @@ class MainActivity : AppCompatActivity() {
         val adapter = WeatherSpinnerAdapter(this, R.layout.item_spinner)
         adapter.submitArray(CityType.values())
         binding.spinnerCities.adapter = adapter
+        spinnerAdapter = adapter
     }
 
     private fun loadWeatherData(savedInstanceState: Bundle?) {
@@ -71,8 +73,7 @@ class MainActivity : AppCompatActivity() {
         if (weatherUI != null) {
             handleSuccessState(weatherUI)
         } else {
-            val requestEntity = buildRequestEntity()
-            requestWeatherData(requestEntity)
+            requestLastSelectedCityType()
         }
     }
 
@@ -91,6 +92,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun requestLastSelectedCityType() {
+        weatherViewModel.viewModelScope.launch {
+            weatherViewModel.weatherIntent.send(WeatherIntent.FetchLastSelectedCityType)
+        }
+    }
+
     private fun observeWeatherData() {
         weatherViewModel.weatherLiveData.observe(this, { weatherState ->
             when (weatherState) {
@@ -98,12 +105,12 @@ class MainActivity : AppCompatActivity() {
                 is WeatherState.NoState -> handleNoState()
                 is WeatherState.Error -> handleErrorState(weatherState.error)
                 is WeatherState.Success -> handleSuccessState(weatherState.weather)
+                is WeatherState.SuccessCityType -> handleSuccessCityTypeState(weatherState.cityType)
             }
         })
     }
 
     private fun handleErrorState(errorType: ErrorType) {
-        savedWeather = null
         binding.progressBar.isVisible = false
         Toast.makeText(applicationContext, errorType.resId, Toast.LENGTH_LONG).show()
     }
@@ -123,5 +130,13 @@ class MainActivity : AppCompatActivity() {
         binding.progressBar.isVisible = false
         binding.tvWeatherNow.text = weatherUI.getCurrentWeather(this)
         binding.tvWeatherNextDays.text = weatherUI.getNextThreeDaysWeather(this)
+    }
+
+    private fun handleSuccessCityTypeState(cityType: CityType?) {
+        val requestEntity = buildRequestEntity(cityType)
+        requestWeatherData(requestEntity)
+        if (cityType == null) return
+        val position = spinnerAdapter?.getPosition(cityType) ?: return
+        binding.spinnerCities.setSelection(position)
     }
 }

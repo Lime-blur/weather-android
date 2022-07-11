@@ -6,4 +6,5 @@ sealed class WeatherIntent {
     data class FetchDailyWeather(
         val weatherRequestEntity: WeatherRequestEntity
     ) : WeatherIntent()
+    object FetchLastSelectedCityType: WeatherIntent()
 }
