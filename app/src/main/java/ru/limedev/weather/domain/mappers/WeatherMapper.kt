@@ -52,12 +52,19 @@ fun WeatherUI.WeatherUIInfo.toWeatherDbInfo(): WeatherDbDto.WeatherDbInfo {
     )
 }
 
-fun WeatherDbEntity.toWeatherUI(): WeatherUI {
-    return WeatherUI(
-        cityType = cityType,
-        currentWeather = weather?.currentWeather.toWeatherUIInfo(),
-        dailyWeather = weather?.dailyWeather?.map { it.toWeatherUIInfo() } ?: listOf()
-    )
+fun WeatherDbEntity?.toWeatherViewState(): WeatherState {
+    return if (this == null) {
+        WeatherState.Error(ErrorType.ERROR_5_ENTITY_FIELD_IS_NULL)
+    } else {
+        WeatherState.Success(
+            WeatherUI(
+                cityType = cityType,
+                currentWeather = weather?.currentWeather.toWeatherUIInfo(),
+                dailyWeather = weather?.dailyWeather?.map { it.toWeatherUIInfo() } ?: listOf(),
+                requestDateInMillis = requestDateInMillis
+            )
+        )
+    }
 }
 
 fun WeatherDbDto.WeatherDbInfo?.toWeatherUIInfo(): WeatherUI.WeatherUIInfo {
