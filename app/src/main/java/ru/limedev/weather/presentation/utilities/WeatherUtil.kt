@@ -5,7 +5,7 @@ import ru.limedev.weather.R
 import ru.limedev.weather.presentation.model.WeatherUI
 import java.util.*
 
-private const val MAX_INTERVAL_OLD_DATE = 60000
+private const val MAX_INTERVAL_OLD_DATE = 60000 * 60 * 24
 
 fun WeatherUI.getNextThreeDaysWeather(context: Context): String {
     return context.getString(
